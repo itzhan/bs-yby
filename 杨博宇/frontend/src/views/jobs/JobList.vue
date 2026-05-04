@@ -49,24 +49,31 @@
             />
           </a-col>
           <a-col :xs="24" :sm="12" :md="2">
-            <a-space>
-              <a-button type="primary" @click="handleSearch">
-                <SearchOutlined /> 搜索
-              </a-button>
-              <a-tooltip v-if="userStore.role === 'STUDENT' || userStore.role === 'student'"
-                title="根据您的个人信息（专业/学历/期望城市/薪资）计算每个岗位的匹配度并排序">
-                <a-button
-                  :type="isMatchMode ? 'default' : 'dashed'"
-                  :loading="matchLoading"
-                  @click="toggleMatch"
-                >
-                  <ThunderboltOutlined />
-                  {{ isMatchMode ? '退出匹配' : '智能匹配' }}
-                </a-button>
-              </a-tooltip>
-            </a-space>
+            <a-button type="primary" block @click="handleSearch">
+              <SearchOutlined /> 搜索
+            </a-button>
           </a-col>
         </a-row>
+
+        <!-- 智能匹配 行（仅学生可见） -->
+        <div
+          v-if="userStore.role === 'STUDENT' || userStore.role === 'student'"
+          class="match-action-row"
+        >
+          <span class="match-action-tip">
+            <ThunderboltOutlined style="color: #faad14; margin-right: 6px" />
+            根据您的专业/学历/期望城市/薪资，智能计算岗位匹配度并排序
+          </span>
+          <a-button
+            :type="isMatchMode ? 'default' : 'primary'"
+            ghost
+            :loading="matchLoading"
+            @click="toggleMatch"
+          >
+            <ThunderboltOutlined />
+            {{ isMatchMode ? '退出匹配' : '智能匹配' }}
+          </a-button>
+        </div>
       </a-card>
 
       <!-- Match tip -->
@@ -331,6 +338,22 @@ onMounted(fetchJobs)
   border-radius: 8px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.match-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #f0f0f0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.match-action-tip {
+  font-size: 13px;
+  color: #888;
 }
 
 .job-list {
